@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grok Search Bridge</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Grok Search Bridge</h1>
+      <p>X検索式ジェネレーター</p>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="画面切替">
+    <button class="tab active" data-tab="compose">作成</button>
+    <button class="tab" data-tab="presets">プリセット</button>
+    <button class="tab" data-tab="manage">管理</button>
+    <button class="tab" data-tab="history">履歴</button>
+  </nav>
+
+  <main class="app">
+    <div class="tab-panel active" data-panel="compose">
+    <section class="card primary">
+      <label class="label" for="freeInput">手入力</label>
+      <textarea id="freeInput" placeholder="例: ChatGPTのChrome拡張について、日本語の不満・要望をRT除外で探したい"></textarea>
+      <div class="hint" id="inputHint">プリセットを選ぶと、ここに入力例が表示されます。</div>
+
+      <div id="tokenFields" class="token-fields"></div>
+
+      <div class="actions grid2">
+        <button id="generateBtn" class="btn primary-btn">X検索式を生成</button>
+        <button id="clearBtn" class="btn">クリア</button>
+      </div>
+    </section>
+
+    <section class="card result-card">
+      <div class="section-title-row">
+        <h2>生成されたX検索式</h2>
+        <span id="status" class="status">未生成</span>
+      </div>
+      <textarea id="queryOutput" class="query-output" placeholder="ここに生成された検索式が表示されます。編集してからコピー / Xで開くできます。"></textarea>
+      <div id="warning" class="warning" hidden></div>
+      <div class="actions grid2">
+        <button id="openXBtn" class="btn primary-btn">Xで開く</button>
+        <button id="copyQueryBtn" class="btn">検索式をコピー</button>
+        <button id="copyUrlBtn" class="btn">検索URLをコピー</button>
+        <button id="saveAsNewBtn" class="btn">別名で追加</button>
+        <button id="overwritePresetBtn" class="btn">選択中に上書き</button>
+        <button id="openGrokBtn" class="btn">Grokで解説</button>
+        <button id="improveGrokBtn" class="btn">Grokで改善</button>
+        <button id="variationsGrokBtn" class="btn">Grokで派生案</button>
+      </div>
+      <div class="hint">Grokは既存のGrokタブを再利用します。未起動時だけ新規タブを開きます。</div>
+    </section>
+    </div>
+
+    <div class="tab-panel" data-panel="manage">
+    <section class="card">
+      <div class="section-title-row">
+        <h2>検索式管理</h2>
+        <button id="newPresetBtn" class="mini-btn">新規</button>
+      </div>
+      <div class="actions grid2 compact-actions">
+        <button id="editPresetBtn" class="btn">選択中を編集</button>
+        <button id="deletePresetBtn" class="btn danger-btn">選択中を削除</button>
+        <button id="exportBtn" class="btn">エクスポート</button>
+        <button id="importBtn" class="btn">インポート</button>
+        <button id="resetPresetsBtn" class="btn danger-btn">初期プリセット復元</button>
+      </div>
+      <input id="importFile" type="file" accept="application/json,.json,.txt" hidden>
+
+      <div id="presetEditor" class="preset-editor" hidden>
+        <div class="editor-title" id="editorTitle">検索式を編集</div>
+        <label>ID</label>
+        <input id="editId" placeholder="例: custom_001">
+        <label>名前</label>
+        <input id="editName" placeholder="例: 自社口コミ監視">
+        <label>説明</label>
+        <input id="editDescription" placeholder="何を調べる検索式か">
+        <label>タグ（カンマ区切り）</label>
+        <input id="editTags" placeholder="例: エゴサーチ,炎上検知">
+        <label>入力例</label>
+        <input id="editPlaceholder" placeholder="例: ブランド名">
+        <label>検索式テンプレート</label>
+        <textarea id="editTemplate" class="query-output" placeholder="例: {keyword} (評判 OR 口コミ) lang:ja -filter:retweets -bot"></textarea>
+        <div class="hint">使用可能: {keyword} {brand} {competitor} {account} {hashtag}</div>
+        <div class="actions grid2">
+          <button id="savePresetBtn" class="btn primary-btn">保存</button>
+          <button id="cancelEditBtn" class="btn">キャンセル</button>
+        </div>
+      </div>
+    </section>
+    </div>
+
+    <div class="tab-panel" data-panel="presets">
+    <section class="card">
+      <div class="section-title-row">
+        <h2>プリセット <span id="presetCount" class="count"></span></h2>
+        <button id="resetFilterBtn" class="mini-btn">絞り込み解除</button>
+      </div>
+      <input id="presetSearch" class="search" placeholder="プリセット名・説明・タグで検索">
+      <div id="tagBar" class="tag-bar"></div>
+      <div id="presetList" class="preset-list"></div>
+    </section>
+    </div>
+
+    <div class="tab-panel" data-panel="history">
+    <section class="card">
+      <div class="section-title-row">
+        <h2>履歴</h2>
+        <button id="clearHistoryBtn" class="mini-btn">履歴削除</button>
+      </div>
+      <div id="historyList" class="history-list empty">履歴はありません</div>
+    </section>
+    </div>
+  </main>
+
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>
